@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>아이스크림 판매량 예측 모델링 분석</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <!-- PyScript -->
+  <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+<body>
+  <header>
+    <h1>아이스크림 판매량 예측 모델링 분석</h1>
+    <p>2019.01 – 2023.12 월별 데이터 기반 머신러닝 예측</p>
+  </header>
+
+  <div class="container">
+
+    <!-- 1. 데이터 로드 & 탐색 -->
+    <section class="section">
+      <h2>1. 데이터 로드 & 탐색(EDA)</h2>
+      <py-config>
+        name: icecream
+        packages:
+          - pandas
+          - matplotlib
+      </py-config>
+      <py-script>
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# CSV 로드 (index.html 과 동일 폴더 또는 상대 경로)
+df = pd.read_csv('assets/data/ice_cream_sales_data.csv', parse_dates=['Month'])
+
+# 데이터 샘플 & 통계치 출력
+display(df.head())
+display(df.describe())
+
+# 온도-판매량 산점도
+plt.figure(figsize=(4,3))
+plt.scatter(df['Temperature'], df['Sales'], color='#FF6B6B', alpha=0.7)
+plt.title('온도 vs 판매량')
+plt.xlabel('온도 (°C)')
+plt.ylabel('판매량')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+      </py-script>
+    </section>
+
+    <!-- 2. 모델링 & 비교 -->
+    <section class="section">
+      <h2>2. 머신러닝 모델링 & 성능 비교</h2>
+      <py-config>
+        packages:
+          - scikit-learn
+          - numpy
+          - pandas
+          - matplotlib
+      </py-config>
+      <py-script>
+import numpy as np
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.svm import SVR
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import r2_score, mean_squared_error
+
+# 특성/타겟 정의
+features = ['Temperature','Holidays','Promotion']
+X = df[features]
+y = df['Sales']
+
+# 학습/테스트 분할
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# 모델 딕셔너리
+models = {
+    'SVR': SVR(),
+    'KNN': KNeighborsRegressor(),
+    'RandomForest': RandomForestRegressor(random_state=42)
+}
+
+results = {}
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    preds = model.predict(X_test)
+    r2  = r2_score(y_test, preds)
+    rmse = np.sqrt(mean_squared_error(y_test, preds))
+    results[name] = {'R2': r2, 'RMSE': rmse}
+
+# 성능 DataFrame
+import pandas as pd
+perf_df = pd.DataFrame(results).T
+display(perf_df)
+
+# 막대 차트로 R² 비교
+import matplotlib.pyplot as plt
+plt.figure(figsize=(4,3))
+plt.bar(perf_df.index, perf_df['R2'], color=['#FF6B6B','#4ECDC4','#45B7D1'])
+plt.title('모델별 R² 비교')
+plt.ylabel('R² Score')
+plt.ylim(0,1)
+plt.grid(axis='y', alpha=0.3)
+plt.tight_layout()
+plt.show()
+      </py-script>
+    </section>
+
+    <!-- 3. 최적 모델 예측 -->
+    <section class="section">
+      <h2>3. 최적 모델 예측 결과</h2>
+      <py-config>
+        packages:
+          - matplotlib
+      </py-config>
+      <py-script>
+# 최적 모델 선택 (R2 최대)
+best_name = perf_df['R2'].idxmax()
+best_model = models[best_name]
+preds = best_model.predict(X_test)
+residuals = y_test - preds
+
+# Actual vs Predicted
+import matplotlib.pyplot as plt
+plt.figure(figsize=(4,3))
+plt.scatter(y_test, preds, color='green', alpha=0.6)
+mn, mx = y_test.min(), y_test.max()
+plt.plot([mn,mx],[mn,mx],'r--')
+plt.title(f'실제 vs 예측 ({best_name})')
+plt.xlabel('Actual Sales')
+plt.ylabel('Predicted Sales')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+# Residual Plot
+plt.figure(figsize=(4,3))
+plt.scatter(preds, residuals, color='purple', alpha=0.6)
+plt.axhline(0, color='red', linestyle='--')
+plt.title(f'잔차 플롯 ({best_name})')
+plt.xlabel('Predicted')
+plt.ylabel('Residuals')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+      </py-script>
+    </section>
+
+  </div>
+</body>
+</html>
