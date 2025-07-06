@@ -489,7 +489,365 @@ plt.show()</code></pre>
             const ctx1 = document.getElementById('svmChart1').getContext('2d');
             const actualVsPredicted = [
                 {x: 158, y: 155}, {x: 174, y: 170}, {x: 184, y: 180}, 
-                {x: 169, y: 165}, {x: 154, y: 158}, {x: 147, y:<!DOCTYPE html>
+                {x: 169, y: 165}, {x: 154, y: 158}, {x: 147, y: 150},
+                {x: 139, y: 142}, {x: 154, y: 151}, {x: 137, y: 140}, {x: 149, y: 152}
+            ];
+
+            new Chart(ctx1, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'SVM 예측',
+                        data: actualVsPredicted,
+                        backgroundColor: 'rgba(255, 107, 107, 0.6)',
+                        borderColor: 'rgba(255, 107, 107, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: '완벽한 예측',
+                        data: [{x: 130, y: 130}, {x: 190, y: 190}],
+                        type: 'line',
+                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        borderColor: 'rgba(255, 0, 0, 0.8)',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        showLine: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '실제 판매량'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '예측 판매량'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // SVM 성능 지표
+            const ctx2 = document.getElementById('svmChart2').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['R² Score', '나머지'],
+                    datasets: [{
+                        data: [0.78, 0.22],
+                        backgroundColor: [
+                            'rgba(255, 107, 107, 0.8)',
+                            'rgba(255, 107, 107, 0.2)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // KNN 차트 생성
+        function createKNNCharts() {
+            // 실제값 vs 예측값
+            const ctx1 = document.getElementById('knnChart1').getContext('2d');
+            const actualVsPredicted = [
+                {x: 158, y: 160}, {x: 174, y: 172}, {x: 184, y: 182}, 
+                {x: 169, y: 167}, {x: 154, y: 156}, {x: 147, y: 148},
+                {x: 139, y: 141}, {x: 154, y: 153}, {x: 137, y: 138}, {x: 149, y: 150}
+            ];
+
+            new Chart(ctx1, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'KNN 예측',
+                        data: actualVsPredicted,
+                        backgroundColor: 'rgba(78, 205, 196, 0.6)',
+                        borderColor: 'rgba(78, 205, 196, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: '완벽한 예측',
+                        data: [{x: 130, y: 130}, {x: 190, y: 190}],
+                        type: 'line',
+                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        borderColor: 'rgba(255, 0, 0, 0.8)',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        showLine: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '실제 판매량'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '예측 판매량'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // K값에 따른 성능
+            const ctx2 = document.getElementById('knnChart2').getContext('2d');
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: [1, 3, 5, 7, 9, 11, 13, 15],
+                    datasets: [{
+                        label: 'R² Score',
+                        data: [0.65, 0.75, 0.82, 0.79, 0.76, 0.73, 0.70, 0.68],
+                        borderColor: 'rgba(78, 205, 196, 1)',
+                        backgroundColor: 'rgba(78, 205, 196, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'K 값'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'R² Score'
+                            },
+                            min: 0.6,
+                            max: 0.85
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Random Forest 차트 생성
+        function createRFCharts() {
+            // 실제값 vs 예측값
+            const ctx1 = document.getElementById('rfChart1').getContext('2d');
+            const actualVsPredicted = [
+                {x: 158, y: 157}, {x: 174, y: 173}, {x: 184, y: 185}, 
+                {x: 169, y: 168}, {x: 154, y: 155}, {x: 147, y: 147},
+                {x: 139, y: 140}, {x: 154, y: 154}, {x: 137, y: 137}, {x: 149, y: 149}
+            ];
+
+            new Chart(ctx1, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Random Forest 예측',
+                        data: actualVsPredicted,
+                        backgroundColor: 'rgba(69, 183, 209, 0.6)',
+                        borderColor: 'rgba(69, 183, 209, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: '완벽한 예측',
+                        data: [{x: 130, y: 130}, {x: 190, y: 190}],
+                        type: 'line',
+                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        borderColor: 'rgba(255, 0, 0, 0.8)',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        showLine: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '실제 판매량'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '예측 판매량'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 특성 중요도
+            const ctx2 = document.getElementById('rfChart2').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['온도', '월', '프로모션', '휴일'],
+                    datasets: [{
+                        label: '중요도',
+                        data: [0.65, 0.20, 0.10, 0.05],
+                        backgroundColor: [
+                            'rgba(69, 183, 209, 0.8)',
+                            'rgba(78, 205, 196, 0.8)',
+                            'rgba(255, 107, 107, 0.8)',
+                            'rgba(255, 205, 86, 0.8)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '중요도'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 성능 비교 차트 생성
+        function createComparisonCharts() {
+            // 모델 성능 종합 비교
+            const ctx1 = document.getElementById('comparisonChart1').getContext('2d');
+            new Chart(ctx1, {
+                type: 'radar',
+                data: {
+                    labels: ['R² Score', '낮은 RMSE', '낮은 MAE', 'CV 안정성'],
+                    datasets: [{
+                        label: 'SVM',
+                        data: [0.78, 0.75, 0.80, 0.76],
+                        borderColor: 'rgba(255, 107, 107, 1)',
+                        backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                        borderWidth: 2
+                    }, {
+                        label: 'KNN',
+                        data: [0.82, 0.78, 0.85, 0.79],
+                        borderColor: 'rgba(78, 205, 196, 1)',
+                        backgroundColor: 'rgba(78, 205, 196, 0.2)',
+                        borderWidth: 2
+                    }, {
+                        label: 'Random Forest',
+                        data: [0.88, 0.85, 0.90, 0.86],
+                        borderColor: 'rgba(69, 183, 209, 1)',
+                        backgroundColor: 'rgba(69, 183, 209, 0.2)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 1
+                        }
+                    }
+                }
+            });
+
+            // 상세 성능 지표
+            const ctx2 = document.getElementById('comparisonChart2').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['SVM', 'KNN', 'Random Forest'],
+                    datasets: [{
+                        label: 'R² Score',
+                        data: [0.78, 0.82, 0.88],
+                        backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                        yAxisID: 'y'
+                    }, {
+                        label: 'RMSE',
+                        data: [8.5, 7.8, 6.2],
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: '모델'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'R² Score'
+                            },
+                            max: 1
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'RMSE'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                        }
+                    }
+                }
+            });
+        }
+
+        // 페이지 로드 시 첫 번째 섹션의 차트 생성
+        document.addEventListener('DOMContentLoaded', function() {
+            createOverviewCharts();
+        });
+
+        // Prism.js 코드 하이라이팅 초기화
+        document.addEventListener('DOMContentLoaded', (event) => {
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
