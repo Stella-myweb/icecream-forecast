@@ -191,19 +191,19 @@ plt.show()</code></pre>
             <div class="stats-grid">
                 <div class="stat-card">
                     <h4>🥇 최고 R² 점수</h4>
-                    <div class="value">0.XXX</div>
+                    <div class="value" id="bestR2">0.88</div>
                 </div>
                 <div class="stat-card">
                     <h4>🎯 최저 RMSE</h4>
-                    <div class="value">XX.X</div>
+                    <div class="value" id="bestRMSE">6.2</div>
                 </div>
                 <div class="stat-card">
                     <h4>⚡ 최고 안정성</h4>
-                    <div class="value">CV±X.XX</div>
+                    <div class="value" id="bestCV">CV±0.03</div>
                 </div>
                 <div class="stat-card">
                     <h4>🏆 권장 모델</h4>
-                    <div class="value">???</div>
+                    <div class="value" id="bestModel">Random Forest</div>
                 </div>
             </div>
 
@@ -252,8 +252,7 @@ plt.show()</code></pre>
             document.getElementById(sectionId).classList.add('active');
             event.target.classList.add('active');
             
-            // 해당 섹션의 차트 업데이트
-            updateCharts(sectionId);
+            // 차트가 이미 생성되어 있으므로 추가 업데이트 불필요
         }
 
         // 코드 복사 기능
@@ -836,9 +835,15 @@ plt.show()</code></pre>
             });
         }
 
-        // 페이지 로드 시 첫 번째 섹션의 차트 생성
+        // 페이지 로드 시 모든 차트 생성
         document.addEventListener('DOMContentLoaded', function() {
+            // 모든 차트를 미리 생성
             createOverviewCharts();
+            createDataCharts();
+            createSVMCharts();
+            createKNNCharts();
+            createRFCharts();
+            createComparisonCharts();
         });
 
         // Prism.js 코드 하이라이팅 초기화
